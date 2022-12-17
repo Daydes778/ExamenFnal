@@ -40,7 +40,7 @@ public class IdiomaDaoImp implements Operaciones<Idioma> {
 
     @Override
     public int update(Idioma t) {
-        String SQL = "UPDATE alumno SET nombre=? WHERE ididioma=?";
+        String SQL = "UPDATE idioma SET nombre=? WHERE ididioma=?";
         int x = 0;
         try{
             cx = Conexion.getConexion();
@@ -56,7 +56,17 @@ public class IdiomaDaoImp implements Operaciones<Idioma> {
 
     @Override
     public int delete(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String SQL = "DELETE FROM idioma WHERE ididioma=?";
+        int x=0;
+        try{
+            cx = Conexion.getConexion();
+            ps = cx.prepareStatement(SQL);
+            ps.setInt(1,id);
+            x=ps.executeUpdate();
+        }catch(SQLException e){
+            System.out.println("Error: "+e);
+        }
+        return x;
     }
 
     @Override
@@ -101,6 +111,7 @@ public class IdiomaDaoImp implements Operaciones<Idioma> {
     @Override
     public List<Map<String, Object>> readAll2() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
     
 }

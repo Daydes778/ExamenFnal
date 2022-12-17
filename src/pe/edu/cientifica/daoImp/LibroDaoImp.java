@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import pe.edu.cientifica.config.Conexion;
@@ -68,7 +69,17 @@ public class LibroDaoImp implements Operaciones<Libro> {
 
     @Override
     public int delete(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String SQL = "DELETE FROM libro WHERE idlibro=?";
+        int x=0;
+        try{
+            cx = Conexion.getConexion();
+            ps = cx.prepareStatement(SQL);
+            ps.setInt(1,id);
+            x=ps.executeUpdate();
+        }catch(SQLException e){
+            System.out.println("Error: "+e);
+        }
+        return x;
     }
 
     @Override
@@ -111,9 +122,10 @@ public class LibroDaoImp implements Operaciones<Libro> {
                 c.setTitulo(rs.getString("titulo"));
                 c.setNpaginas(rs.getString("npaginas"));
                 c.setEdicion(rs.getString("edicion"));
-                c.setFecha_publicacion(rs.getString("fecha_publicacion")); 
-                c.setIdidioma(rs.getInt("ididioma"));   
-                c.setIdeditorial(rs.getInt("ideditorial"));   
+                c.setFecha_publicacion(rs.getString("fecha_publicacion"));
+                c.setIdidioma(rs.getInt("ididioma"));
+                c.setIdeditorial(rs.getInt("ideditorial"));
+                c.setIdautor(rs.getInt("idautor"));
                 lista.add(c);
             }
         }catch(SQLException e){
@@ -124,7 +136,73 @@ public class LibroDaoImp implements Operaciones<Libro> {
 
     @Override
     public List<Map<String, Object>> readAll2() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String SQL = "SELECT c.ideditorial , c.nombre as editorial , c.direccion , c.email ,d.idlibro , d.titulo as libro ,d.npaginas , d.edicion , d.fecha_publicacion , d.ididioma , d.idautor FROM libro as d " +
+                     "inner join editorial as c on d.ideditorial = c.ideditorial";
+                
+        List<Map<String, Object>> lista = new ArrayList<>();
+        try {
+            cx = Conexion.getConexion();
+            ps = cx.prepareStatement(SQL);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                Map<String, Object> map = new HashMap();
+                map.put("ideditorial", rs.getInt("ideditorial"));
+                map.put("editorial", rs.getString("editorial"));
+                map.put("direccion", rs.getString("direccion"));
+                map.put("email", rs.getString("email"));
+                map.put("idlibro", rs.getInt("idlibro"));
+                map.put("libro", rs.getString("libro"));
+                map.put("npaginas", rs.getString("npaginas"));
+                map.put("edicion", rs.getString("edicion"));
+                map.put("fecha_publicacion", rs.getString("fecha_publicacion"));
+                map.put("ididioma", rs.getString("ididioma"));
+                map.put("idautor", rs.getString("idautor"));
+                lista.add(map);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: "+e);
+        }
+        return lista;
     }
-    
+    public List<Map<String, Object>> readAll3() {
+        String SQL ="SELECT c.ididioma , c.nombre as idioma , d.idlibro FROM libro as d "+
+                    "inner join idioma as c on d.ididioma = c.ididioma";
+        List<Map<String, Object>> lista2 = new ArrayList<>();
+        try {
+            cx = Conexion.getConexion();
+            ps = cx.prepareStatement(SQL);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                Map<String, Object> map = new HashMap();
+                map.put("ididioma", rs.getInt("ididioma"));
+                map.put("idioma", rs.getString("idioma"));
+                map.put("idlibro", rs.getInt("idlibro"));
+                lista2.add(map);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: "+e);
+        }
+        return lista2; 
+    }
+    public List<Map<String, Object>> readAll4() {
+        String SQL ="SELECT c.idautor , c.nombres as autor , c.apellidos , d.idlibro  FROM libro as d "+
+                    "inner join autor as c on d.idautor = c.idautor ";
+        List<Map<String, Object>> lista3 = new ArrayList<>();
+        try {
+            cx = Conexion.getConexion();
+            ps = cx.prepareStatement(SQL);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                Map<String, Object> map = new HashMap();
+                map.put("idautor", rs.getInt("idautor"));
+                map.put("autor", rs.getString("autor"));
+                map.put("apellidos", rs.getString("apellidos"));
+                map.put("idlibro", rs.getInt("idlibro"));
+                lista3.add(map);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: "+e);
+        }
+        return lista3; 
+    }
 }

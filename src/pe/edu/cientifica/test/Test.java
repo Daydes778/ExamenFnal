@@ -20,7 +20,7 @@ import pe.edu.cientifica.model.Libro;
  * @author Alumno
  */
 public class Test {
-private Gson gson = new Gson();
+//private Gson gson = new Gson();
     /**
      * @param args the command line arguments
      */
@@ -31,8 +31,8 @@ private Gson gson = new Gson();
         }else{
             System.out.println("NO");
         }
-        EditorialDaoImp cdi =  new EditorialDaoImp();
-        System.out.println(cdi.update(new Editorial(1,"e","e","e"))); 
+       LibroDaoImp cdi =  new LibroDaoImp();
+        System.out.println(cdi.readAll3()); 
     }
     
 }

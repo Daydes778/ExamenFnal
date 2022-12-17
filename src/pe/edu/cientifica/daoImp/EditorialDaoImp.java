@@ -60,7 +60,17 @@ public class EditorialDaoImp implements Operaciones<Editorial> {
 
     @Override
     public int delete(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String SQL = "DELETE FROM editorial WHERE ideditorial=?";
+        int x=0;
+        try{
+            cx = Conexion.getConexion();
+            ps = cx.prepareStatement(SQL);
+            ps.setInt(1,id);
+            x=ps.executeUpdate();
+        }catch(SQLException e){
+            System.out.println("Error: "+e);
+        }
+        return x;
     }
 
     @Override

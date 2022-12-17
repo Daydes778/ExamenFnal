@@ -58,43 +58,49 @@ public class AutorDaoImp implements Operaciones<Autor>{
 
     @Override
     public int delete(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Autor read(int id) {
-        String SQL = "SELECT *FROM autor WHERE idautor=?";
-        Autor c =  new Autor();
+        String SQL = "DELETE FROM autor WHERE idautor=?";
+        int x=0;
         try{
             cx = Conexion.getConexion();
             ps = cx.prepareStatement(SQL);
             ps.setInt(1,id);
-            rs=ps.executeQuery();
-            while(rs.next()){ 
-                c.setIdautor(rs.getInt("idautor"));
-                c.setNombres(rs.getString("nombres"));
-                c.setApellidos(rs.getString("apellidos"));
-            }
+            x=ps.executeUpdate();
         }catch(SQLException e){
             System.out.println("Error: "+e);
         }
-        return c;
+        return x;
+    }
+
+    @Override
+    public Autor read(int id) {
+        String SQL = "select *from autor where idautor=?";
+        Autor au = new Autor();
+        try {
+            cx = Conexion.getConexion();
+            ps = cx.prepareStatement(SQL);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                au.setIdautor(rs.getInt("idautor"));
+                au.setNombres(rs.getString("nombres"));
+                au.setApellidos(rs.getString("apellidos"));            
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: "+e);
+        }
+        return au;
     }
 
     @Override
     public List<Autor> readAll() {
-                String SQL = "SELECT *FROM autor";
+        String SQL = "SELECT *FROM autor";
         List<Autor> lista = new ArrayList<>();
         try{
             cx = Conexion.getConexion();
             ps = cx.prepareStatement(SQL);
             rs= ps.executeQuery();
             while(rs.next()){
-                Autor c =  new Autor();
-                c.setIdautor(rs.getInt("idautor"));
-                c.setNombres(rs.getString("nombres"));
-                c.setApellidos(rs.getString("apellidos"));                
-                lista.add(c);
+                lista.add(new Autor(rs.getInt(1),rs.getString(2),rs.getString(3)));
             }
         }catch(SQLException e){
             System.out.println("Error: "+e);
@@ -105,5 +111,5 @@ public class AutorDaoImp implements Operaciones<Autor>{
     @Override
     public List<Map<String, Object>> readAll2() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    }  
 }
